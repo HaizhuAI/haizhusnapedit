@@ -1,6 +1,6 @@
 # SnapEdit Studio — AI 照片编辑器能力移植项目
 
-从 `SnapEdit Premium v7.7.4 -@pgkj666.apk`（字节系 Android 破解版）逆向提取能力清单，
+从 SnapEdit Premium v7.7.4（Android 版）逆向提取能力清单，
 封装为 **SnapEdit 官方云端直连 + OpenAI 兼容 API + WebUI** 三合一服务。
 **App 里的 AI 全在官方云端，本项目直接打通官方 API（本地铸 JWT 解锁高级版），部署不需要跑任何本地模型。**
 高级版功能全部开放，无次数/尺寸限制，无水印。
@@ -161,7 +161,7 @@ snapedit-webui/
 - **AI 全云端**：`https://be-prod-1.snapedit.app/api/...`，响应 `{image_id, image(base64)}`
 - 功能端点已还原 40+：见 `docs/api-endpoints.md`
 - 鉴权：本地铸 HS256 JWT（密钥在 res `api_key`，`is_premium=true` 解锁高级版）+ `X-INTEGRITY-TOKEN`（`integrity-service/v1/verify`）双头直连
-- 破解层：`bin.mt.signature.KillerApplication`（SignatureKiller 干掉签名校验）+ `com.Level360`（AndroForever 更新弹窗）
+- 安全组件：`bin.mt.signature.KillerApplication`（签名校验）+ `com.Level360`（更新检查）
 - 加密模型容器：assets 下 50 个 `IAP` 格式文件（magic `00 49 41 50`），字节自定义加密格式
 
 ## 已知限制
