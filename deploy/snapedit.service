@@ -1,0 +1,15 @@
+[Unit]
+Description=SnapEdit Studio AI API + WebUI (v2 auth)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/haizhucodex/snapedit-webui
+EnvironmentFile=/root/haizhucodex/snapedit-webui/.env
+ExecStart=/root/haizhucodex/snapedit-webui/venv/bin/uvicorn backend.app:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

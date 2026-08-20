@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnapEdit Studio — AI 照片编辑器</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ============ LOGIN VIEW ============ -->
+<div id="view-login" class="login-view" style="display:none">
+  <div class="login-orb orb-a"></div>
+  <div class="login-orb orb-b"></div>
+  <div class="login-card" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <div class="login-brand">
+      <div class="logo logo-lg">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lgS" x1="0" y1="0" x2="32" y2="32">
+              <stop offset="0" stop-color="#4FD8C4"/><stop offset="1" stop-color="#2E9BE6"/>
+            </linearGradient>
+          </defs>
+          <path d="M20.5 8c-1.8-1.5-4.3-2-6.8-1.4C9.6 7.5 7 10.7 7 14.4c0 3.4 2.3 6 5.4 7.2 1.9.7 3.7.6 5.2-.3 1.6-1 2.5-2.6 2.5-4.5 0-2-1.2-3.6-3-4.4-1.3-.6-2.8-.5-3.9.2-1.1.7-1.7 1.8-1.7 3.1 0 1.4.8 2.5 2 3.1.8.4 1.6.4 2.3.1 1-.4 1.6-1.2 1.6-2.2 0-.8-.5-1.4-1.2-1.7-.5-.2-1-.1-1.4.1-.4.2-.6.5-.6.9 0 .3.2.5.4.6.2.1.4.1.6 0 .2-.1.3-.3.3-.4" fill="url(#lgS)"/>
+        </svg>
+      </div>
+      <h1 id="login-title" class="login-title">SnapEdit <span>Studio</span></h1>
+      <p class="login-sub">AI 照片编辑器 · 管理员访问</p>
+    </div>
+
+    <form id="login-form" class="login-form" autocomplete="off">
+      <label class="field-label" for="admin-password">管理员密码</label>
+      <div class="pwd-wrap">
+        <input id="admin-password" type="password" class="field-input" placeholder="请输入管理员密码" autocomplete="current-password" required>
+        <button type="button" id="pwd-toggle" class="pwd-toggle" aria-label="显示/隐藏密码" tabindex="-1">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+        </button>
+      </div>
+      <div id="login-error" class="login-error" role="alert"></div>
+      <button type="submit" id="login-btn" class="btn primary btn-lg full">进入工作台</button>
+    </form>
+
+    <div class="login-foot">
+      <span class="badge"><i class="dot"></i>API 在线</span>
+      <span class="login-ver">v7.7.4 · 能力移植</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP VIEW ============ -->
+<div id="view-app" class="app" style="display:none">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lgS2" x1="0" y1="0" x2="32" y2="32">
+              <stop offset="0" stop-color="#4FD8C4"/><stop offset="1" stop-color="#2E9BE6"/>
+            </linearGradient>
+          </defs>
+          <path d="M20.5 8c-1.8-1.5-4.3-2-6.8-1.4C9.6 7.5 7 10.7 7 14.4c0 3.4 2.3 6 5.4 7.2 1.9.7 3.7.6 5.2-.3 1.6-1 2.5-2.6 2.5-4.5 0-2-1.2-3.6-3-4.4-1.3-.6-2.8-.5-3.9.2-1.1.7-1.7 1.8-1.7 3.1 0 1.4.8 2.5 2 3.1.8.4 1.6.4 2.3.1 1-.4 1.6-1.2 1.6-2.2 0-.8-.5-1.4-1.2-1.7-.5-.2-1-.1-1.4.1-.4.2-.6.5-.6.9 0 .3.2.5.4.6.2.1.4.1.6 0 .2-.1.3-.3.3-.4" fill="url(#lgS2)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">SnapEdit Studio</div>
+        <div class="brand-sub">AI 照片编辑器 · v7.7.4 能力移植</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="badge" id="api-badge"><i class="dot"></i>API 在线</span>
+      <button class="btn ghost" onclick="toggleApiDoc()">API 文档</button>
+      <button class="btn ghost" id="logout-btn" onclick="logout()">退出</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- left: upload + image -->
+    <main class="stage">
+      <div id="dropzone" class="dropzone" role="button" tabindex="0" aria-label="上传图片，支持点击、键盘和拖拽">
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" class="file-input-native">
+        <div class="dz-inner" id="dz-inner">
+          <div class="dz-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4m0 0L7 9m5-5l5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+          </div>
+          <div class="dz-title">拖拽图片到这里，或 <span class="link">点击上传</span></div>
+          <div class="dz-hint">支持 JPG / PNG / WebP · 处理走 SnapEdit 官方云</div>
+        </div>
+      </div>
+
+      <div class="viewer" id="viewer" style="display:none">
+        <div class="viewer-tabs">
+          <div class="seg" role="tablist">
+            <button class="seg-item active" id="tab-after" role="tab" aria-selected="true" onclick="setView('after')">处理后</button>
+            <button class="seg-item" id="tab-before" role="tab" aria-selected="false" onclick="setView('before')">原图</button>
+          </div>
+          <div class="spacer"></div>
+          <a id="download-link" class="btn small" download="snapedit-result.png">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+            下载结果
+          </a>
+        </div>
+        <div class="canvas-wrap">
+          <img id="view-img" class="view-img" alt="result">
+        </div>
+        <div class="meta-row" id="meta-row"></div>
+      </div>
+    </main>
+
+    <!-- right: tools -->
+    <aside class="panel">
+      <div class="panel-head">工具箱 <span class="count" id="tool-count"></span></div>
+      <div class="tool-grid" id="tool-grid"></div>
+
+      <div class="params" id="params" style="display:none">
+        <div class="panel-head">参数</div>
+        <div id="param-fields"></div>
+        <button class="btn primary full" id="run-btn" onclick="runTool()">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5z"/></svg>
+          执行处理
+        </button>
+      </div>
+
+      <div class="status" id="status">就绪 — 登录工作台，上传图片开始编辑</div>
+    </aside>
+  </div>
+
+  <!-- API doc modal -->
+  <div class="modal" id="api-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="modal-card">
+      <div class="modal-head">OpenAI 兼容 API <span class="api-tag">Bearer Token 认证</span><button class="btn ghost" onclick="document.getElementById('api-modal').style.display='none'">✕</button></div>
+      <pre id="api-doc"></pre>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
